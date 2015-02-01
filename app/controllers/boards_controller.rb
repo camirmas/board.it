@@ -4,7 +4,10 @@ class BoardsController < ApplicationController
   def index
     @boards = @user.boards.all
 
-    render json: @boards
+    respond_to do |format|
+      format.html
+      format.json { render json: @boards }
+    end
   end
 
   def create
