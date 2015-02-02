@@ -23,3 +23,16 @@
   top: 10px !important;
   left: 10px !important;
 }
+
+.remove:hover, .edit:hover {
+  cursor: pointer;
+}
+
+.boards-view {
+  margin-top: 40px;
+}
+
+.add-board {
+  margin: 0 auto 30px auto;
+  width: 60%;
+}

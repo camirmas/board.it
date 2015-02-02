@@ -5,6 +5,8 @@
   <%= stylesheet_link_tag    'application', media: 'all' %>
   <%= javascript_include_tag 'application' %>
   <%= csrf_meta_tags %>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 </head>
   <body>
     <div class="ui left vertical inverted labeled inline icon sidebar menu">
@@ -12,19 +14,23 @@
         <i class="book icon"></i>
         All Saved Posts
       </a>
+      <a class="item" href="/logout">
+        <i class="sign out icon"></i>
+        Log Out
+      </a>
     </div>
-    <div class="ui grid pusher">
-      <div class="row">
-        <div class="ui one wide column black big launch right attached fixed button menu-button">
-          <i class="content icon"></i>
-          <span class="text">Menu</span>
-        </div>
-        <div class="thirteen wide column"></div>
-        <div class="two wide column">
-          <%= link_to "Sign Out", logout_path, class: "ui button right floated" %>
-        </div>
+    <div class="pusher">
+      <div class="ui black big launch right attached fixed button menu-button">
+        <i class="content icon"></i>
+        <span class="text">Menu</span>
       </div>
-      <%= yield %>
+      <span class="ui two wide column right floated icon button add-board-button">
+        <i class="two plus icon"></i>
+        Add Board
+      </span>
+      <div class="ui grid">
+        <%= yield %>
+      </div>
     </div>
   </body>
 </html>

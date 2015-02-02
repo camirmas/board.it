@@ -1,17 +1,20 @@
-<div class="fourteen wide column centered row">
-  <div class="four wide column boards-title"><span id="#username"><%= @user.name %></span>'s Boards</div>
-  <div class="ten wide column"></div>
-</div>
+<div class="fourteen wide column centered boards-view" data-userId='<%= @user.id %>'>
+  <div class="fourteen wide column centered row">
+    <div class="four wide column boards-title"><span id="#username"><%= @user.name %></span>'s Boards</div>
+    <div class="ten wide column"></div>
+  </div>
 
-<div class="fourteen wide column centered row">
-  <div class="ui cards">
-    <div class="ui card">
-      <div class="image">
-        <img src="http://b.thumbs.redditmedia.com/pbXbC1TB8iYEO07u4Sa3KDbi5C0jAun4tMExJgrj95Q.jpg">
-      </div>
-      <div class="content">
-        <div class="header">cat</div>
-      </div>
+  <div class="fourteen wide column centered row">
+    <div class="ui fluid cards">
+      <% @boards.each do |board| %>
+        <div class="ui card" data-boardId="<%= board.id %>">
+          <div class="content">
+            <div class="header left floated"><%= board.title %></div>
+            <i class="large remove icon right floated delete"></i>
+            <i class="large edit icon right floated update"></i>
+          </div>
+        </div>
+      <% end %>
     </div>
   </div>
 </div>
