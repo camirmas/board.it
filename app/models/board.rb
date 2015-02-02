@@ -1,7 +1,6 @@
 class Board < ActiveRecord::Base
   belongs_to :user
-  has_many :saves
-  has_many :posts, through: :saves
+  has_many :posts
 
   validates :title, presence: true
 end

@@ -1,4 +1,3 @@
 class Post < ActiveRecord::Base
-  has_many :saves
-  has_many :boards, through: :saves
+  belongs_to :board
 end
