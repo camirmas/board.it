@@ -6,9 +6,25 @@
   <%= javascript_include_tag 'application' %>
   <%= csrf_meta_tags %>
 </head>
-<body>
-
-<%= yield %>
-
-</body>
+  <body>
+    <div class="ui left vertical inverted labeled inline icon sidebar menu">
+      <a class="item">
+        <i class="book icon"></i>
+        All Saved Posts
+      </a>
+    </div>
+    <div class="ui grid pusher">
+      <div class="row">
+        <div class="ui one wide column black big launch right attached fixed button menu-button">
+          <i class="content icon"></i>
+          <span class="text">Menu</span>
+        </div>
+        <div class="thirteen wide column"></div>
+        <div class="two wide column">
+          <%= link_to "Sign Out", logout_path, class: "ui button right floated" %>
+        </div>
+      </div>
+      <%= yield %>
+    </div>
+  </body>
 </html>
