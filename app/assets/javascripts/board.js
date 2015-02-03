@@ -116,4 +116,44 @@ $(document).ready(function() {
       $(".cards").append(board);
     });
   });
+
+  $(".cards").on("click", ".card", function() {
+    var boardTitle = $(this).find(".header").text();
+    var userId = $(".boards-view").data('userid');
+    var boardId = $(this).closest(".card").data('boardid');
+
+    if($(".board-show")) {
+      $(".board-show").remove();
+    }
+
+    $.ajax("/users/" + userId + "/boards/" + boardId + "/posts", {
+      type: 'get'
+    }).done(function(data) {
+      var boardModalStart = '\
+      <div class="ui modal board-show">\
+        <i class="close icon"></i>\
+        <div class="header">\
+          ' + boardTitle + '\
+        </div>\
+      ';
+      var boardModalEnd = '</div>';
+      for (var i = 0; i < data.length; i++) {
+        var listItem = '\
+          <div class="content">\
+            <div class="ui medium image">\
+              <img src="http://www.adweek.com/files/imagecache/node-detail/news_article/lilbub-hed2-2013.gif">\
+            </div>\
+            <div class="description">\
+              <div class="ui header">' + data[i].title + '</div>\
+              <p>' + data[i].author + ' | Score: ' + data[i].score + '</p>\
+              <p>' + data[i].selftext + '</p>\
+            </div>\
+          </div>\
+        ';
+        boardModalStart += listItem;
+      }
+      $(".boards-view").append(boardModalStart + boardModalEnd);
+      $('.board-show').modal('show');
+    });
+  });
 });
