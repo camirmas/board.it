@@ -1,0 +1,46 @@
+<html>
+  <head>
+    <title></title>
+  </head>
+  <body>
+    <div id = "container">
+
+      <div class="ui labeled input">
+        <div class="ui blue label">
+          http://reddit.com/r/
+        </div>
+        <input type="text" placeholder="subreddit">
+      </div>
+
+      <main class="ui page grid">
+        <div class="row">
+          <div class="aligned starter column">
+            <div class="ui header caption"><h2></h2></div>
+            <div class="ui segment contents"></div>
+          </div>
+        </div>
+      </main>
+
+
+
+      <div class="ui primary button save-post">
+        save
+      </div>
+
+      <div class="ui modal">
+        <div class="ui segment all-boards" data-userid = "<%= current_user.id  %>">
+          <% @boards.each do |board| %>
+            <div class="ui vertical segment single-board" data-boardid = "<%= board.id %>" >
+              <p><%= board.title %></p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+
+
+    </div>
+
+  </body>
+      <%= link_to "the reddits", "auth/reddit" %>
+</html>

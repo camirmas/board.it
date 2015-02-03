@@ -54,6 +54,7 @@ class PostsController < ApplicationController
       :selftext,
       :reddit_id,
       :media,
+      :board_id,
     )
   end
 end
