@@ -36,3 +36,21 @@
   margin: 0 auto 30px auto;
   width: 60%;
 }
+
+.post-delete {
+  margin-top: 2.5em !important;
+}
+
+.update, .delete {
+  float: right;
+}
+
+.edit-board {
+  width: 50%;
+  float: left;
+  margin: 2em;
+}
+
+.edit-board-label {
+  font-size: 1.6em;
+}
