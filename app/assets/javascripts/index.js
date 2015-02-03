@@ -1,3 +1,4 @@
+var childData;
 var url = "http://www.reddit.com";
 var jsonP = ".json?jsonp=?";
 var i = 0
@@ -7,13 +8,42 @@ $(document).ready(function() {
   $.ajax(url + "/.json?limit=100&count=100", {
     type: 'get',
   }).done(function(data) {
-    var childData = data.data.children[i].data;
+    childData = data.data.children[i].data;
     console.log(data);
     mediaType(childData);
     arrowUpDown(data);
   });
 
   inputRequest();
+
+  $('.save-post').on("click", function() {
+    $('.modal')
+    .modal('show');
+  });
+
+  var userId = $(".all-boards").data('userid');
+
+  $('.all-boards').on("click", ".single-board", function() {
+    var boardId = $(this).data('boardid');
+    $.ajax('/users/' + userId + '/boards/' + boardId + '/posts', {
+      type: 'post',
+      data: {
+        post: {
+          title: childData.title,
+          author: childData.author,
+          score: childData.score,
+          url: childData.url,
+          subreddit: childData.subreddit,
+          selftext: childData.selftext,
+          reddit_id: childData.id,
+          media: childData.media,
+          board_id: boardId,
+        }
+      }
+    }).done(function(data) {
+      console.log('hi');
+    });
+  });
 });
 
 function inputRequest() {
@@ -36,6 +66,8 @@ function makeImage(content) {
 }
 
 function makeVideo(content) {
+  // var videoUrl = $(content).replace("watch?v=", "embed/");
+  // var textUrl = videoUrl.text(videoUrl);
   $('.contents').html($('<iframe width=500 height=350 src="' + content +'">' +
   '</iframe>'));
 }
