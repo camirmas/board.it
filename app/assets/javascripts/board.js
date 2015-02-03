@@ -1,5 +1,3 @@
-var prevBoard;
-
 $(document).ready(function() {
   $('.menu-button').on('click', function() {
     $('.sidebar').sidebar('setting', 'transition', 'overlay')
@@ -43,8 +41,6 @@ $(document).ready(function() {
       <div class="ui card" data-boardId="' + data.id + '">\
         <div class="content">\
           <div class="header left floated">' + data.title + '</div>\
-          <i class="large remove icon right floated delete"></i>\
-          <i class="large edit icon right floated update"></i>\
         </div>\
       </div>\
       ';
@@ -59,15 +55,16 @@ $(document).ready(function() {
     });
   });
 
-  $(".boards-view").on("click", ".delete", function() {
+  $(document).on("click", ".board-show .delete", function() {
     var userId = $(".boards-view").data('userid');
-    var boardId = $(this).closest(".card").data('boardid');
-    var res = confirm("Are you sure you want to delete this?");
+    var boardId = $(".board-show").data('boardid');
+    var confirmDelete = confirm("Are you sure you want to delete this?");
 
-    if (res) {
+    if (confirmDelete) {
       $.ajax('/users/' + userId + '/boards/' + boardId, {
         type: 'delete'
       }).done(function(data) {
+        $('.board-show').modal('hide');
         $(".cards").find("[data-boardId='" + data.id + "']").fadeOut(function() {
           $(this).remove();
         });
@@ -75,24 +72,24 @@ $(document).ready(function() {
     }
   });
 
-  $(".boards-view").on("click", ".update", function() {
-    var boardTitle = $(this).prev().prev().text();
+  $(document).on("click", ".board-show .update", function(event) {
+    var boardTitle = $.trim($(this).parent().text());
     var editForm = '\
     <div class="ui form edit-board">\
-      <label>Title</label>\
+      <label class="edit-board-label">Title</label>\
       <input type="text" value="' + boardTitle + '">\
       <div class="ui green submit button board-update">\
         <i class="checkmark icon"></i>\
       </div>\
     </div>\
     ';
-    $(this).parent().empty().append(editForm);
+    $(this).parent().replaceWith(editForm);
   });
 
-  $(".boards-view").on("click", ".board-update", function() {
+  $(document).on("click", ".board-show .board-update", function() {
     var userId = $(".boards-view").data('userid');
-    var boardId = $(this).closest(".card").data('boardid');
-    var updatedTitle = $(this).prev().val();
+    var boardId = $(".board-show").data('boardid');
+    var updatedTitle = $.trim($(this).prev().val());
 
     $.ajax('/users/' + userId + '/boards/' + boardId, {
       type: 'patch',
@@ -102,18 +99,15 @@ $(document).ready(function() {
         }
       }
     }).done(function(data) {
+      console.log('it worked');
       var card = $(".cards").find("[data-boardId='" + data.id + "']");
-      card.remove();
-      var board = '\
-      <div class="ui card" data-boardId="' + data.id + '">\
-        <div class="content">\
-          <div class="header left floated">' + data.title + '</div>\
-          <i class="large remove icon right floated delete"></i>\
-          <i class="large edit icon right floated update"></i>\
-        </div>\
+      var newHeader = '\
+      <div class="header">\
+        ' + data.title + '\
+        <i class="remove icon delete""></i><i class="edit icon update"></i>\
       </div>\
       ';
-      $(".cards").append(board);
+      $(".board-show .edit-board").replaceWith(newHeader);
     });
   });
 
@@ -130,16 +124,18 @@ $(document).ready(function() {
       type: 'get'
     }).done(function(data) {
       var boardModalStart = '\
-      <div class="ui modal board-show">\
+      <div class="ui modal board-show" data-boardId="' + boardId + '">\
         <i class="close icon"></i>\
         <div class="header">\
           ' + boardTitle + '\
+          <i class="remove icon delete""></i><i class="edit icon update"></i>\
         </div>\
       ';
       var boardModalEnd = '</div>';
+
       for (var i = 0; i < data.length; i++) {
         var listItem = '\
-          <div class="content">\
+          <div class="content ui vertical segment" data-postId="' + data[i].id + '">\
             <div class="ui medium image">\
               <img src="http://www.adweek.com/files/imagecache/node-detail/news_article/lilbub-hed2-2013.gif">\
             </div>\
@@ -147,6 +143,7 @@ $(document).ready(function() {
               <div class="ui header">' + data[i].title + '</div>\
               <p>' + data[i].author + ' | Score: ' + data[i].score + '</p>\
               <p>' + data[i].selftext + '</p>\
+              <div class="ui right floated red button post-delete">Delete</div>\
             </div>\
           </div>\
         ';
@@ -155,5 +152,22 @@ $(document).ready(function() {
       $(".boards-view").append(boardModalStart + boardModalEnd);
       $('.board-show').modal('show');
     });
+  });
+
+  $(document).on("click", ".post-delete", function() {
+    var postId = $(this).closest(".content").data("postid");
+    var userId = $(".boards-view").data('userid');
+    var boardId = $(this).closest(".board-show").data('boardid');
+    var confirmDelete = confirm("Are you sure you want to delete this post?");
+
+    if (confirmDelete) {
+      $.ajax("/users/" + userId + "/boards/" + boardId + "/posts/" + postId, {
+        type: 'delete'
+      }).done(function(data) {
+        $(document).find("[data-postId='" + postId + "']").fadeOut(function() {
+          $(this).remove();
+        });
+      });
+    }
   });
 });
