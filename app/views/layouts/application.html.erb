@@ -2,13 +2,35 @@
 <html>
 <head>
   <title>BoardIt</title>
-  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
-  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= stylesheet_link_tag    'application', media: 'all' %>
+  <%= javascript_include_tag 'application' %>
   <%= csrf_meta_tags %>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 </head>
-<body>
-
-<%= yield %>
-
-</body>
+  <body>
+    <div class="ui left vertical inverted labeled inline icon sidebar menu">
+      <a class="item">
+        <i class="book icon"></i>
+        All Saved Posts
+      </a>
+      <a class="item" href="/logout">
+        <i class="sign out icon"></i>
+        Log Out
+      </a>
+    </div>
+    <div class="pusher">
+      <div class="ui black big launch right attached fixed button menu-button">
+        <i class="content icon"></i>
+        <span class="text">Menu</span>
+      </div>
+      <span class="ui two wide column right floated icon button add-board-button">
+        <i class="two plus icon"></i>
+        Add Board
+      </span>
+      <div class="ui grid">
+        <%= yield %>
+      </div>
+    </div>
+  </body>
 </html>
