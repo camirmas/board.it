@@ -40,9 +40,7 @@ $(document).ready(function() {
           board_id: boardId,
         }
       }
-    }).done(function(data) {
-      console.log('hi');
-    });
+    }).done(function(data) {});
   });
 });
 

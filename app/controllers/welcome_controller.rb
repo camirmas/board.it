@@ -2,7 +2,9 @@ class WelcomeController < ApplicationController
   before_action :set_user
 
   def index
-    @boards = @user.boards.all
+    if current_user
+      @boards = @user.boards.all
+    end
   end
 
   private
