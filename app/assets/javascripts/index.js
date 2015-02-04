@@ -1,13 +1,16 @@
+var parentData;
 var childData;
+var input = "";
 var url = "http://www.reddit.com";
 var jsonP = ".json?jsonp=?";
 var i = 0
 
 $(document).ready(function() {
 
-  $.ajax(url + "/.json?limit=100&count=100", {
+  $.ajax(url + "/.json?limit=25&count=25", {
     type: 'get',
   }).done(function(data) {
+    parentData = data.data
     childData = data.data.children[i].data;
     console.log(data);
     mediaType(childData);
@@ -17,7 +20,7 @@ $(document).ready(function() {
   inputRequest();
 
   $('.save-post').on("click", function() {
-    $('.modal')
+    $('.save')
     .modal('show');
   });
 
@@ -38,25 +41,29 @@ $(document).ready(function() {
           reddit_id: childData.id,
           media: childData.media,
           board_id: boardId,
+          thumbnail: childData.thumbnail,
         }
       }
-    }).done(function(data) {
-      console.log('hi');
-    });
+    }).done(function(data) {});
   });
+
 });
 
 function inputRequest() {
   $('input').on('keyup', function(e) {
     if (e.keyCode == 13 && $('input').val()) {
-      $.ajax(url + "/r/" + $('input').val() + ".json?limit=100&count=100", {
+      input = "/r/" + $('input').val()
+      $('input').val("");
+      $.ajax(url +  input + "/.json?limit=25&count=25", {
         type: 'get',
       }).done(function(data) {
+        i = 0;
+        parentData = data.data;
         childData = data.data.children[0].data;
         console.log(data);
         mediaType(childData);
         arrowUpDown(data);
-      });
+      })
     }
   });
 }
@@ -73,45 +80,54 @@ function makeVideo(content) {
 }
 
 function makeText(content) {
-  $('.contents').html($('<p>' + content + '<p>'));
+  $('.contents').html($('<h3>' + content + '</h3>'));
 }
 
 function makeLink(content) {
-  $('.contents').html($('<a href="' + content + '"' + 'a>'+ content +'<a>'));
+  $('.contents').html($('<a href="' + content + '"' + 'a>'+ content +'</a>'));
+  $('.contents').append($('<iframe class="ui fullscreen modal link" src ="' + content + '"></iframe>'));
+  $('.contents').on("click", function() {
+    $('.link').modal('show');
+  });
 }
 
-function makeCaption(content) {
-  $('.caption').html($('<h2>' + content + '</h2>'));
+function makeInfo(content) {
+  $('.caption').html($('<h2>' + content.title + '</h2>'));
+  $('.score').html($('<h1>' + content.score + '</h1>'));
+  $('.subreddit').html($('<p>' + 'submitted by: ' + content.author + ' to: ' + content.subreddit + '</p>'));
 }
 
 function mediaType(redditObject) {
 
   if (redditObject.selftext === "") {
-    if (redditObject.thumbnail === "" || redditObject.domain.indexOf('imgur') == -1 && redditObject.domain.indexOf('youtu') == -1 ) {
+    if (redditObject.thumbnail === "" || redditObject.domain.indexOf('imgur') == -1) {
       makeLink(redditObject.url);
-      makeCaption(redditObject.title);
+      makeInfo(redditObject);
     }
     else if (redditObject.domain.indexOf("youtu") !== -1) {
       makeVideo(redditObject.url);
-      makeCaption(redditObject.title);
+      makeInfo(redditObject);
     }
     else {imgurCheck(redditObject);};
   }
   else {
     makeText(redditObject.selftext);
-    makeCaption(redditObject.title);
+    makeInfo(redditObject);
   }
 }
 
 function arrowUpDown(json) {
   $(window).off();
+  var after = parentData.after;
+  var before = parentData.before;
 
-  i = 0;
   $(window).on('keyup', function(e) {
-    if (e.keyCode == 40 && i < 99) {
+    if (e.keyCode == 40 && i < 24) {
       i += 1;
       console.log(i);
       childData = json.data.children[i].data;
+      $('.fullscreen').remove();
+      $('.contents').off();
       mediaType(childData);
       $(document).off();
     }
@@ -119,8 +135,35 @@ function arrowUpDown(json) {
       i -= 1;
       console.log(i);
       childData = json.data.children[i].data;
+      $('.fullscreen').remove();
+      $('.contents').off();
       mediaType(childData);
       $(document).off();
+    }
+    else if (e.keyCode == 40 && i == 24) {
+      i = 0;
+      $.ajax(url + '/' + input + "/.json?limit=25&count=25&after=" + after, {
+        type: 'get',
+      }).done(function(data) {
+        parentData = data.data
+        childData = data.data.children[i].data;
+        console.log(input);
+        mediaType(childData);
+        arrowUpDown(data);
+      });
+    }
+    else if (e.keyCode == 38 && i == 0) {
+      i = 24;
+      $.ajax(url + '/' + input + "/.json?limit=25&count=25&before=" + before, {
+        type: 'get',
+      }).done(function(data) {
+        parentData = data.data
+        childData = data.data.children[i].data;
+        console.log(data);
+        mediaType(childData);
+        i = 24;
+        arrowUpDown(data);
+      });
     };
   });
 }
@@ -129,11 +172,11 @@ function imgurCheck(redditObject) {
   var redditURL = redditObject.url;
   var redditDomain = redditObject.domain.indexOf('imgur');
   if (redditDomain !== -1) {
-    makeCaption(redditObject.title);
+    makeInfo(redditObject);
     imgurRequest(redditURL);
   }
   else {
-    makeCaption(redditObject.title);
+    makeInfo(redditObject);
     makeImage(redditObject.url);
   };
 }
@@ -194,4 +237,5 @@ function arrowLeftRight(galleryData) {
       makeImage(galleryData[j].link);
     };
   });
+
 }

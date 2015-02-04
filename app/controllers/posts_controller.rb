@@ -55,6 +55,7 @@ class PostsController < ApplicationController
       :reddit_id,
       :media,
       :board_id,
+      :thumbnail,
     )
   end
 end
