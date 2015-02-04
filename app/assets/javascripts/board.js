@@ -15,7 +15,7 @@ $(document).ready(function() {
       <i class="checkmark icon"></i>\
       Complete\
       </div>\
-        <i class="remove icon hide-form"></i>\
+        <i class="big remove icon hide-form"></i>\
     </div>';
 
     if ($(".add-board").length === 0) {
@@ -99,7 +99,6 @@ $(document).ready(function() {
         }
       }
     }).done(function(data) {
-      console.log('it worked');
       var card = $(".cards").find("[data-boardId='" + data.id + "']");
       var newHeader = '\
       <div class="header">\
@@ -148,14 +147,21 @@ $(document).ready(function() {
 
       for (var i = 0; i < data.length; i++) {
         if (can_modify) {
+          var imageURL = data[i].thumbnail ? data[i].thumbnail : "https://www.redditstatic.com/about/assets/reddit-alien.png";
           var listItem = '\
             <div class="content ui vertical segment" data-postId="' + data[i].id + '">\
-              <div class="ui medium image">\
-                <img src="http://www.adweek.com/files/imagecache/node-detail/news_article/lilbub-hed2-2013.gif">\
+              <div class="ui small image">\
+                <img src="' + imageURL + '">\
               </div>\
               <div class="description">\
-                <div class="ui header">' + data[i].title + '</div>\
-                <p>' + data[i].author + ' | Score: ' + data[i].score + '</p>\
+                <div class="ui header"><span class="score">' + data[i].score + '\
+                 | </span><a href="' + data[i].url + '" target="_blank">\
+                 ' + data[i].title + '</a></div>\
+                <p>posted by: <a href="http://reddit.com/u/' + data[i].author + '\
+                " target="_blank">\
+                ' + data[i].author + '</a> to: \
+                <a href="http://reddit.com/r/' + data[i].subreddit + '" target="_blank">\
+                ' + data[i].subreddit + '</a></p>\
                 <p>' + data[i].selftext + '</p>\
                 <div class="ui right floated red button post-delete">Delete</div>\
               </div>\
