@@ -13,7 +13,7 @@ class BoardsController < ApplicationController
   def create
     @board = @user.boards.new(board_params)
 
-    if @board.save
+    if can_modify?(@user) && @board.save
       render json: @board
     else
     end
@@ -22,7 +22,7 @@ class BoardsController < ApplicationController
   def update
     @board = @user.boards.find(params[:id])
 
-    if @board.update(board_params)
+    if can_modify?(@user) && @board.update(board_params)
       render json: @board
     else
     end
@@ -31,7 +31,7 @@ class BoardsController < ApplicationController
   def destroy
     @board = @user.boards.find(params[:id])
 
-    if @board.destroy
+    if can_modify?(@user) && @board.destroy
       render json: @board
     else
     end

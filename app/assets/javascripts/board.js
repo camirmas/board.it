@@ -15,7 +15,7 @@ $(document).ready(function() {
       <i class="checkmark icon"></i>\
       Complete\
       </div>\
-        <i class="remove icon hide-form"></i>\
+        <i class="big remove icon hide-form"></i>\
     </div>';
 
     if ($(".add-board").length === 0) {
@@ -99,7 +99,6 @@ $(document).ready(function() {
         }
       }
     }).done(function(data) {
-      console.log('it worked');
       var card = $(".cards").find("[data-boardId='" + data.id + "']");
       var newHeader = '\
       <div class="header">\
@@ -108,6 +107,7 @@ $(document).ready(function() {
       </div>\
       ';
       $(".board-show .edit-board").replaceWith(newHeader);
+      $(card).find(".header").text(data.title);
     });
   });
 
@@ -123,30 +123,64 @@ $(document).ready(function() {
     $.ajax("/users/" + userId + "/boards/" + boardId + "/posts", {
       type: 'get'
     }).done(function(data) {
-      var boardModalStart = '\
-      <div class="ui modal board-show" data-boardId="' + boardId + '">\
-        <i class="close icon"></i>\
-        <div class="header">\
-          ' + boardTitle + '\
-          <i class="remove icon delete""></i><i class="edit icon update"></i>\
-        </div>\
-      ';
+      var can_modify = $(".modifiable").length !== 0;
+
+      if (can_modify) {
+        var boardModalStart = '\
+        <div class="ui modal board-show" data-boardId="' + boardId + '">\
+          <i class="close icon"></i>\
+          <div class="header">\
+            ' + boardTitle + '\
+            <i class="remove icon delete""></i><i class="edit icon update"></i>\
+          </div>\
+        ';
+      } else {
+        var boardModalStart = '\
+        <div class="ui modal board-show" data-boardId="' + boardId + '">\
+          <i class="close icon"></i>\
+          <div class="header">\
+            ' + boardTitle + '\
+          </div>\
+        ';
+      }
       var boardModalEnd = '</div>';
 
       for (var i = 0; i < data.length; i++) {
-        var listItem = '\
+        if (can_modify) {
+          var imageURL = data[i].thumbnail ? data[i].thumbnail : "https://www.redditstatic.com/about/assets/reddit-alien.png";
+          var listItem = '\
+            <div class="content ui vertical segment" data-postId="' + data[i].id + '">\
+              <div class="ui small image">\
+                <img src="' + imageURL + '">\
+              </div>\
+              <div class="description">\
+                <div class="ui header"><span class="score">' + data[i].score + '\
+                 | </span><a href="' + data[i].url + '" target="_blank">\
+                 ' + data[i].title + '</a></div>\
+                <p>posted by: <a href="http://reddit.com/u/' + data[i].author + '\
+                " target="_blank">\
+                ' + data[i].author + '</a> to: \
+                <a href="http://reddit.com/r/' + data[i].subreddit + '" target="_blank">\
+                ' + data[i].subreddit + '</a></p>\
+                <p>' + data[i].selftext + '</p>\
+                <div class="ui right floated red button post-delete">Delete</div>\
+              </div>\
+            </div>\
+          ';
+        } else {
+          var listItem = '\
           <div class="content ui vertical segment" data-postId="' + data[i].id + '">\
             <div class="ui medium image">\
               <img src="http://www.adweek.com/files/imagecache/node-detail/news_article/lilbub-hed2-2013.gif">\
             </div>\
             <div class="description">\
               <div class="ui header">' + data[i].title + '</div>\
-              <p>' + data[i].author + ' | Score: ' + data[i].score + '</p>\
-              <p>' + data[i].selftext + '</p>\
-              <div class="ui right floated red button post-delete">Delete</div>\
+                <p>' + data[i].author + ' | Score: ' + data[i].score + '</p>\
+                <p>' + data[i].selftext + '</p>\
+              </div>\
             </div>\
-          </div>\
-        ';
+          ';
+        }
         boardModalStart += listItem;
       }
       $(".boards-view").append(boardModalStart + boardModalEnd);
