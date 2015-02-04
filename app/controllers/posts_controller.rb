@@ -10,7 +10,7 @@ class PostsController < ApplicationController
   def create
     @post = @board.posts.new(post_params)
 
-    if @post.save
+    if can_modify?(@user) && @post.save
       render json: @post
     else
     end
@@ -19,7 +19,7 @@ class PostsController < ApplicationController
   def update
     @post = @board.posts.find(params[:id])
 
-    if @post.update(post_params)
+    if can_modify?(@user) && @post.update(post_params)
       render json: @post
     else
     end
@@ -28,7 +28,7 @@ class PostsController < ApplicationController
   def destroy
     @post = @board.posts.find(params[:id])
 
-    if @post.destroy
+    if can_modify?(@user) && @post.destroy
       render json: @post
     else
     end
