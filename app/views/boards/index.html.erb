@@ -17,5 +17,5 @@
   </div>
 </div>
 
-<div class='<%= can_modify?(@user)'>
+<div class='<%= current_user && can_modify?(@user) ? "modifiable" : "readable" %>'>
 </div>
