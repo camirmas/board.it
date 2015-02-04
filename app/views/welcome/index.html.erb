@@ -3,31 +3,68 @@
     <title></title>
   </head>
   <body>
-    <div id = "container">
-
-      <div class="ui labeled input">
-        <div class="ui blue label">
-          http://reddit.com/r/
+      <div class="four wide column">
+        <div class = "row"><br></div>
+        <div class="ui labeled input subinput">
+          <div class="ui blue label sublabel">
+            http://reddit.com/r/
+          </div>
+          <input class=subreddit type=text placeholder=subreddit>
         </div>
-        <input type="text" placeholder="subreddit">
       </div>
 
-      <main class="ui page grid">
-        <div class="row">
-          <div class="aligned starter column">
-            <div class="ui header caption"><h2></h2></div>
-            <div class="ui segment contents"></div>
+      <div class="eight wide column">
+        <div class="eight wide column">
+          <div class="ui two column grid">
+            <div class="three wide column">
+              <div class="ui horizontal segment">
+                <div class = "score"> </div>
+              </div>
+            </div>
+            <div class="twelve wide column">
+              <div class="ui vertical segment">
+                <div class="ui header caption"></div>
+              </div>
+              <div class="ui vertical segment">
+                <div class = "subreddit author"> </div>
+              </div>
+            </div>
           </div>
         </div>
-      </main>
+
+        <div class="ui segment contents"></div>
+
+        <div class="ui primary button save-post">
+          save
+        </div>
+        <div class="ui primary button save-post">
+          comments
+        </div>
+
+      </div>
+
+      <div class="four wide column">
+      </div>
+
+
+
 
 
     <% if current_user %>
-      <div class="ui primary button save-post">
-        save
-      </div>
-
-      <div class="ui modal">
+      <div class="ui modal save">
+        <div class="ui two column grid">
+          <div class = "column">
+            <h2>  Which board would you like to save to? </h2>
+          </div>
+          <div class = "column">
+            <div class="ui search">
+              <div class="ui icon input">
+                <input class="prompt" type="text" placeholder="Add a board">
+              </div>
+              <div class="results"></div>
+            </div>
+          </div>
+        </div>
         <div class="ui segment all-boards" data-userid = "<%= current_user.id  %>">
           <% @boards.each do |board| %>
             <div class="ui vertical segment single-board" data-boardid = "<%= board.id %>" >
@@ -36,12 +73,14 @@
           <% end %>
         </div>
       </div>
+    <% else %>
+      <div class="ui small save modal">
+        <h2> Sorry, you must be logged in to save a post. </h2>
+        <%= link_to "login here!", "auth/reddit" %>
+      </div>
     <% end %>
 
 
-
-    </div>
-
   </body>
-      <%= link_to "the reddits", "auth/reddit" %>
+
 </html>
