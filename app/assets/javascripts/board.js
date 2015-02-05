@@ -115,6 +115,7 @@ $(document).ready(function() {
     var boardTitle = $(this).find(".header").text();
     var userId = $(".boards-view").data('userid');
     var boardId = $(this).closest(".card").data('boardid');
+    window.location.hash = boardId;
 
     if($(".board-show")) {
       $(".board-show").remove();
@@ -131,7 +132,8 @@ $(document).ready(function() {
           <i class="close icon"></i>\
           <div class="header">\
             ' + boardTitle + '\
-            <i class="remove icon delete""></i><i class="edit icon update"></i>\
+            <i class="remove icon delete""></i>\
+            <i class="edit icon update"></i>\
           </div>\
         ';
       } else {
@@ -146,15 +148,15 @@ $(document).ready(function() {
       var boardModalEnd = '</div>';
 
       for (var i = 0; i < data.length; i++) {
+        var imageURL = data[i].thumbnail ? data[i].thumbnail : "https://www.redditstatic.com/about/assets/reddit-alien.png";
         if (can_modify) {
-          var imageURL = data[i].thumbnail ? data[i].thumbnail : "https://www.redditstatic.com/about/assets/reddit-alien.png";
           var listItem = '\
             <div class="content ui vertical segment" data-postId="' + data[i].id + '">\
               <div class="ui small image">\
                 <img src="' + imageURL + '">\
               </div>\
               <div class="description">\
-                <div class="ui header"><span class="score">' + data[i].score + '\
+                <div class="ui header"><span class="board-post-score">' + data[i].score + '\
                  | </span><a href="' + data[i].url + '" target="_blank">\
                  ' + data[i].title + '</a></div>\
                 <p>posted by: <a href="http://reddit.com/u/' + data[i].author + '\
@@ -170,12 +172,18 @@ $(document).ready(function() {
         } else {
           var listItem = '\
           <div class="content ui vertical segment" data-postId="' + data[i].id + '">\
-            <div class="ui medium image">\
-              <img src="http://www.adweek.com/files/imagecache/node-detail/news_article/lilbub-hed2-2013.gif">\
+            <div class="ui small image">\
+              <img src="' + imageURL + '">\
             </div>\
             <div class="description">\
-              <div class="ui header">' + data[i].title + '</div>\
-                <p>' + data[i].author + ' | Score: ' + data[i].score + '</p>\
+              <div class="ui header"><span class="board-post-score">' + data[i].score + '\
+                | </span><a href="' + data[i].url + '" target="_blank">\
+                ' + data[i].title + '</a></div>\
+                <p>posted by: <a href="http://reddit.com/u/' + data[i].author + '\
+                  " target="_blank">\
+                  ' + data[i].author + '</a> to: \
+                  <a href="http://reddit.com/r/' + data[i].subreddit + '" target="_blank">\
+                  ' + data[i].subreddit + '</a></p>\
                 <p>' + data[i].selftext + '</p>\
               </div>\
             </div>\
@@ -185,6 +193,11 @@ $(document).ready(function() {
       }
       $(".boards-view").append(boardModalStart + boardModalEnd);
       $('.board-show').modal('show');
+      $('.board-show').modal('setting', {
+        onHide: function() {
+          window.location.hash = "";
+        }
+      });
     });
   });
 
@@ -204,4 +217,9 @@ $(document).ready(function() {
       });
     }
   });
+
+  if (window.location.hash !== "") {
+    var boardId = parseInt(window.location.hash.split("#")[1]);
+    $("[data-boardId='" + boardId + "']").trigger("click");
+  }
 });
