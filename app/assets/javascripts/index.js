@@ -165,11 +165,11 @@ function arrowUpDown(json) {
       $(".post-comment").attr("href", "http://www.reddit.com" + childData.permalink);
       $('.fullscreen').remove();
       $('.contents').off();
-      mediaType(childData);
       if ($('.left-arrow')) {
         $('.left-arrow').remove();
         $('.right-arrow').remove();
       };
+      mediaType(childData);
       $(".post-comment").attr("href", "http://www.reddit.com" + childData.permalink);
       $(document).off();
     }
@@ -180,11 +180,11 @@ function arrowUpDown(json) {
       $(".post-comment").attr("href", "www.reddit.com" + childData.permalink);
       $('.fullscreen').remove();
       $('.contents').off();
-      mediaType(childData);
       if ($('.left-arrow')) {
         $('.left-arrow').remove();
         $('.right-arrow').remove();
       };
+      mediaType(childData);
       $(".post-comment").attr("href", "http://www.reddit.com" + childData.permalink);
       $(document).off();
     }
