@@ -2,14 +2,18 @@ $(document).ready(function() {
   $('.menu-button').on('click', function() {
     $('.sidebar').sidebar('setting', 'transition', 'overlay')
     .sidebar('toggle');
+    $('body').removeClass('pushable')
   });
+
+  if (window.location.href.indexOf("boards") === -1) {
+    $('.add-board-button').remove();
+  }
 
   $('.add-board-button').on("click", function() {
     var boardForm = '\
     <div class="ui form add-board">\
       <div class="field">\
-        <label>Name</label>\
-        <input type="text" name="some_name" value="">\
+        <input type="text" name="some_name" value="" placeholder="Name">\
       </div>\
       <div class="ui green submit button board-create">\
       <i class="checkmark icon"></i>\
