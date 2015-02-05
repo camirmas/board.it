@@ -46,18 +46,19 @@
 
     <% if current_user %>
       <div class="ui modal save">
-        <h2> Which board would you like to save to? </h2>
+        <div class="header" >
+          <h2> Which board would you like to save to? </h2>
         <div class="ui search">
           <div class="ui icon input">
             <input class="prompt add-board" type="text" placeholder="Add a board">
             <i class="add circle icon"></i>
         </div>
-        <div class="results"></div>
       </div>
-        <div class="ui segment all-boards" data-userid = "<%= current_user.id  %>">
+      </div>
+        <div class="all-boards" data-userid = "<%= current_user.id  %>">
           <% @boards.each do |board| %>
             <div class="ui vertical segment single-board" data-boardid = "<%= board.id %>" >
-              <h3><%= board.title %></h3>
+              <h3 class = "board-title"><%= board.title %></h3>
             </div>
           <% end %>
         </div>
@@ -65,6 +66,8 @@
     <% else %>
       <div class="ui small save modal">
         <h2> Sorry, you must be logged in to save a post. </h2>
-        <%= link_to "login here!", "auth/reddit" %>
+        <a class="ui button" href="auth/reddit">
+          Login Here!
+        </a>
       </div>
     <% end %>

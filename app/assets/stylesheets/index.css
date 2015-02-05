@@ -24,6 +24,10 @@ img {
   margin-left: 10px;
 }
 
+.sublabel {
+  background-color: #d1e1f0 !important;
+}
+
 .left-arrow {
   margin-top: 63px !important;
   margin-left: 198px !important;
@@ -39,6 +43,14 @@ img {
   background-color: #d1e1f0 !important;
 }
 
-.text {
+.board-title {
+  float-left;
+}
+
+.content-text {
   word-wrap:break-word;
+}
+
+.pushable {
+  background-color: #0c1c25 !important;
 }

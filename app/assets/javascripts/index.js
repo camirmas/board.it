@@ -13,6 +13,7 @@ $(document).ready(function() {
     parentData = data.data
     childData = data.data.children[i].data;
     console.log(data);
+    $(".post-comment").attr("href", "http://www.reddit.com" + childData.permalink);
     mediaType(childData);
     arrowUpDown(data);
   });
@@ -63,10 +64,21 @@ $(document).ready(function() {
     });
   });
 
-  $('.post-comment').on("click", function() {
-    $(".post-comment").attr("href", "http://www.reddit.com" + childData.permalink);
+  $('.add-board').on('keyup', function(e) {
+    if (e.keyCode == 13 && $('.add-board').val()) {
+      $.ajax('/users/' + userId + '/boards', {
+        type: 'post',
+        data: {
+          board: {
+            title: $('.add-board').val(),
+          }
+        }
+      }).done(function(data) {
+        $('.all-boards').append('<div class="ui vertical segment single-board" data-boardid="' + data.id + '">'
+        + '<h3 class = "board-title">' + data.title + '</h3> </div>')
+      });
+    }
   });
-
 
 });
 
@@ -82,6 +94,7 @@ function inputRequest() {
         parentData = data.data;
         childData = data.data.children[0].data;
         console.log(data);
+        $(".post-comment").attr("href", "http://www.reddit.com" + childData.permalink);
         mediaType(childData);
         arrowUpDown(data);
       })
@@ -101,15 +114,16 @@ function makeVideo(content) {
 }
 
 function makeText(content) {
-  $('.contents').html($('<h3 class = "text">' + content + '</h3>'));
+  $('.contents').html($('<h3 class = "content-text">' + content + '</h3>'));
 }
 
 function makeLink(content) {
-  $('.contents').html($('<a class = "text" href="' + content + '"' + 'a>'+ content +'</a>'));
-  $('.contents').append($('<iframe class="ui fullscreen modal link" src ="' + content + '"></iframe>'));
-  $('.contents').on("click", function() {
-    $('.link').modal('show');
-  });
+  $('.contents').html($('<a target="_blank" class = "content-text" href="' + content + '"' + 'a>'+ childData.title +'</a>'));
+
+  // $('.contents').append($('<iframe class="ui fullscreen modal link" src ="' + content + '"></iframe>'));
+  // $('.contents').on("click", function() {
+  //   $('.link').modal('show');
+  // });
 }
 
 function makeInfo(content) {
@@ -150,11 +164,12 @@ function arrowUpDown(json) {
       $(".post-comment").attr("href", "http://www.reddit.com" + childData.permalink);
       $('.fullscreen').remove();
       $('.contents').off();
+      mediaType(childData);
       if ($('.left-arrow')) {
         $('.left-arrow').remove();
         $('.right-arrow').remove();
       };
-      mediaType(childData);
+      $(".post-comment").attr("href", "http://www.reddit.com" + childData.permalink);
       $(document).off();
     }
     else if (e.keyCode == 38 && i > 0) {
@@ -169,6 +184,7 @@ function arrowUpDown(json) {
         $('.left-arrow').remove();
         $('.right-arrow').remove();
       };
+      $(".post-comment").attr("href", "http://www.reddit.com" + childData.permalink);
       $(document).off();
     }
     else if (e.keyCode == 40 && i == 24) {
