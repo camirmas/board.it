@@ -4,7 +4,8 @@ img {
 }
 
 .background {
-  background-color: #0c1c25;
+  /*background-color: #0c1c25;*/
+  background-image: url('noisy_net.png');
 }
 
 .contents {
@@ -41,10 +42,6 @@ img {
 
 .button {
   background-color: #d1e1f0 !important;
-}
-
-.board-title {
-  float-left;
 }
 
 .content-text {
