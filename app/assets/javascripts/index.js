@@ -129,7 +129,8 @@ function makeLink(content) {
 function makeInfo(content) {
   $('.caption').html($('<h2>' + content.title + '</h2>'));
   $('.post-score').html($('<h1>' + content.score + '</h1>'));
-  $('.subreddit').html($('<p>' + 'submitted by: ' + content.author + ' to: ' + content.subreddit + '</p>'));
+  $('.subreddit').html($('<p>' + 'submitted by: <a href="http://reddit.com/u/' + content.author + '" target="_blank">' + content.author + '</a> \
+  to: <a href="http://reddit.com/r/' + content.subreddit + '" target="_blank">' + content.subreddit + '</a></p>'));
 }
 
 function mediaType(redditObject) {
