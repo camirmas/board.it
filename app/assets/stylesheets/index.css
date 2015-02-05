@@ -39,12 +39,13 @@ img {
   color: #d1e1f0;
 }
 
-.button {
+.post-comment, .save-post, .menu-button, .add-board-button {
   background-color: #d1e1f0 !important;
 }
 
 .content-text {
   word-wrap:break-word;
+  color: black !important;
 }
 
 .pushable {

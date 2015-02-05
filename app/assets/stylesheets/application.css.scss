@@ -15,6 +15,23 @@
  */
 @import 'semantic-ui';
 
+body {
+  color: #d1e1f0 !important;
+}
+
+.board-show {
+  color: black !important;
+}
+
+.ui.card > .content, .ui.modal > .content {
+  background: #d1e1f0 !important;
+}
+
+.ui.modal > .header {
+  color: #d1e1f0;
+  background: #0c1c25;
+}
+
 .boards-title {
   font-size: 24px !important;
 }
@@ -22,6 +39,12 @@
 .menu-button {
   top: 10px !important;
   left: 10px !important;
+} .text {
+  color: black;
+}
+
+.save-post, .post-comment {
+  color: black !important;
 }
 
 .remove:hover, .edit:hover {
@@ -35,10 +58,13 @@
 .add-board {
   margin: 0 auto 30px auto;
   width: 60%;
+} .add-board-button {
+  color: black !important;
 }
 
 .post-delete {
   margin-top: 2.5em !important;
+  color: black !important;
 }
 
 .update, .delete {
@@ -61,8 +87,4 @@
 
 .modal .description {
   font-size: 1.4em;
-}
-
-body {
-  color: #d1e1f0 !important;
 }
