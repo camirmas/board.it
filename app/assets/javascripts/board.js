@@ -115,6 +115,7 @@ $(document).ready(function() {
     var boardTitle = $(this).find(".header").text();
     var userId = $(".boards-view").data('userid');
     var boardId = $(this).closest(".card").data('boardid');
+    window.location.hash = boardId;
 
     if($(".board-show")) {
       $(".board-show").remove();
@@ -131,7 +132,8 @@ $(document).ready(function() {
           <i class="close icon"></i>\
           <div class="header">\
             ' + boardTitle + '\
-            <i class="remove icon delete""></i><i class="edit icon update"></i>\
+            <i class="remove icon delete""></i>\
+            <i class="edit icon update"></i>\
           </div>\
         ';
       } else {
@@ -154,7 +156,7 @@ $(document).ready(function() {
                 <img src="' + imageURL + '">\
               </div>\
               <div class="description">\
-                <div class="ui header"><span class="score">' + data[i].score + '\
+                <div class="ui header"><span class="board-post-score">' + data[i].score + '\
                  | </span><a href="' + data[i].url + '" target="_blank">\
                  ' + data[i].title + '</a></div>\
                 <p>posted by: <a href="http://reddit.com/u/' + data[i].author + '\
@@ -174,7 +176,7 @@ $(document).ready(function() {
               <img src="' + imageURL + '">\
             </div>\
             <div class="description">\
-              <div class="ui header"><span class="score">' + data[i].score + '\
+              <div class="ui header"><span class="board-post-score">' + data[i].score + '\
                 | </span><a href="' + data[i].url + '" target="_blank">\
                 ' + data[i].title + '</a></div>\
                 <p>posted by: <a href="http://reddit.com/u/' + data[i].author + '\
@@ -191,6 +193,11 @@ $(document).ready(function() {
       }
       $(".boards-view").append(boardModalStart + boardModalEnd);
       $('.board-show').modal('show');
+      $('.board-show').modal('setting', {
+        onHide: function() {
+          window.location.hash = "";
+        }
+      });
     });
   });
 
@@ -210,4 +217,9 @@ $(document).ready(function() {
       });
     }
   });
+
+  if (window.location.hash !== "") {
+    var boardId = parseInt(window.location.hash.split("#")[1]);
+    $("[data-boardId='" + boardId + "']").trigger("click");
+  }
 });
