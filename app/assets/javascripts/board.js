@@ -152,7 +152,8 @@ $(document).ready(function() {
       var boardModalEnd = '</div>';
 
       for (var i = 0; i < data.length; i++) {
-        var imageURL = data[i].thumbnail ? data[i].thumbnail : "https://www.redditstatic.com/about/assets/reddit-alien.png";
+        console.log(data[i].thumbnail);
+        var imageURL = data[i].thumbnail ? data[i].thumbnail : "noisy_net.png";
         if (can_modify) {
           var listItem = '\
             <div class="content ui vertical segment" data-postId="' + data[i].id + '">\
