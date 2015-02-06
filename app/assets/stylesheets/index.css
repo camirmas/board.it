@@ -8,6 +8,10 @@ img {
   background-image: url('noisy_net.png');
 }
 
+.post-info {
+  color: #d1e1f0;
+}
+
 .contents {
     min-height: 200px;
     min-width: 200px;

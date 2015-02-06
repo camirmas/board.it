@@ -10,15 +10,21 @@ $(document).ready(function() {
   $.ajax(url + "/.json?limit=25&count=25", {
     type: 'get',
   }).done(function(data) {
-    parentData = data.data
-    childData = data.data.children[i].data;
-    console.log(data);
-    $(".post-comment").attr("href", "http://www.reddit.com" + childData.permalink);
-    mediaType(childData);
-    arrowUpDown(data);
+    resetContent(data);
   });
 
-  inputRequest();
+  $('.subreddit-input').on('keyup', function(e) {
+    if (e.keyCode == 13 && $('.subreddit-input').val()) {
+      input = "/r/" + $('input').val()
+      $('.subreddit-input').val("");
+      $.ajax(url +  input + "/.json?limit=25&count=25", {
+        type: 'get',
+      }).done(function(data) {
+        i = 0;
+        resetContent(data);
+      })
+    }
+  });
 
   $('.save-post').on("click", function() {
     if ($(".save-to-board")) {
@@ -91,33 +97,12 @@ $(document).ready(function() {
 
 });
 
-function inputRequest() {
-  $('.subreddit-input').on('keyup', function(e) {
-    if (e.keyCode == 13 && $('.subreddit-input').val()) {
-      input = "/r/" + $('input').val()
-      $('.subreddit-input').val("");
-      $.ajax(url +  input + "/.json?limit=25&count=25", {
-        type: 'get',
-      }).done(function(data) {
-        i = 0;
-        parentData = data.data;
-        childData = data.data.children[0].data;
-        console.log(data);
-        $(".post-comment").attr("href", "http://www.reddit.com" + childData.permalink);
-        mediaType(childData);
-        arrowUpDown(data);
-      })
-    }
-  });
-}
 
 function makeImage(content) {
   $('.contents').html($('<img class="ui centered rounded bordered image" src =' + content + '>'));
 }
 
 function makeVideo(content) {
-  // var videoUrl = $(content).replace("watch?v=", "embed/");
-  // var textUrl = videoUrl.text(videoUrl);
   $('.contents').html($('<iframe width=500 height=350 src="' + content +'">' +
   '</iframe>'));
 }
@@ -128,11 +113,6 @@ function makeText(content) {
 
 function makeLink(content) {
   $('.contents').html($('<a target="_blank" class = "ui primary button content-text" href="' + content + '"' + 'a>'+ 'Read More' +'</a>'));
-
-  // $('.contents').append($('<iframe class="ui fullscreen modal link" src ="' + content + '"></iframe>'));
-  // $('.contents').on("click", function() {
-  //   $('.link').modal('show');
-  // });
 }
 
 function makeInfo(content) {
@@ -149,19 +129,16 @@ function mediaType(redditObject) {
       makeLink(redditObject.url);
       makeInfo(redditObject);
     }
-    else if (redditObject.domain.indexOf("youtu") !== -1) {
-      makeVideo(redditObject.url);
-      makeInfo(redditObject);
-    }
     else {imgurCheck(redditObject);};
   }
   else {
-    makeText((redditObject.selftext));
+    grabText(redditObject.url);
+    // makeText((redditObject.selftext));
     makeInfo(redditObject);
   }
 }
 
-function arrowUpDown(json) {
+function arrowUpDown(data) {
   $(window).off();
   var after = parentData.after;
   var before = parentData.before;
@@ -170,43 +147,19 @@ function arrowUpDown(json) {
     if (e.keyCode == 40 && i < 24) {
       i += 1;
       console.log(i);
-      childData = json.data.children[i].data;
-      $(".post-comment").attr("href", "http://www.reddit.com" + childData.permalink);
-      $('.fullscreen').remove();
-      $('.contents').off();
-      if ($('.left-arrow')) {
-        $('.left-arrow').remove();
-        $('.right-arrow').remove();
-      };
-      mediaType(childData);
-      $(".post-comment").attr("href", "http://www.reddit.com" + childData.permalink);
-      $(document).off();
+      createContent(data);
     }
     else if (e.keyCode == 38 && i > 0) {
       i -= 1;
       console.log(i);
-      childData = json.data.children[i].data;
-      $(".post-comment").attr("href", "www.reddit.com" + childData.permalink);
-      $('.fullscreen').remove();
-      $('.contents').off();
-      if ($('.left-arrow')) {
-        $('.left-arrow').remove();
-        $('.right-arrow').remove();
-      };
-      mediaType(childData);
-      $(".post-comment").attr("href", "http://www.reddit.com" + childData.permalink);
-      $(document).off();
+      createContent(data);
     }
     else if (e.keyCode == 40 && i == 24) {
       i = 0;
       $.ajax(url + '/' + input + "/.json?limit=25&count=25&after=" + after, {
         type: 'get',
       }).done(function(data) {
-        parentData = data.data
-        childData = data.data.children[i].data;
-        console.log(input);
-        mediaType(childData);
-        arrowUpDown(data);
+        resetContent(data);
       });
     }
     else if (e.keyCode == 38 && i == 0) {
@@ -214,15 +167,31 @@ function arrowUpDown(json) {
       $.ajax(url + '/' + input + "/.json?limit=25&count=25&before=" + before, {
         type: 'get',
       }).done(function(data) {
-        parentData = data.data
-        childData = data.data.children[i].data;
-        console.log(data);
-        mediaType(childData);
-        i = 24;
-        arrowUpDown(data);
+        resetContent(data);
       });
     };
   });
+}
+
+function resetContent(data) {
+  parentData = data.data
+  childData = data.data.children[i].data;
+  $(".post-comment").attr("href", "http://reddit.com" + childData.permalink);
+  mediaType(childData);
+  arrowUpDown(data);
+}
+
+function createContent (data) {
+  childData = data.data.children[i].data;
+  $(".post-comment").attr("href", "http://reddit.com" + childData.permalink);
+  $('.fullscreen').remove();
+  $('.contents').off();
+  if ($('.left-arrow')) {
+    $('.left-arrow').remove();
+    $('.right-arrow').remove();
+  };
+  mediaType(childData);
+  $(document).off();
 }
 
 function imgurCheck(redditObject) {
@@ -315,5 +284,16 @@ function arrowLeftRight(galleryData) {
       makeImage(galleryData[j].link);
     };
   });
+}
 
+function grabText(link) {
+  $.ajax('/noko', {
+    type: 'get',
+    data: {
+      url: link
+    }
+  }).done(function(data) {
+    console.log(data);
+    $('.contents').html(data);
+  });
 }
