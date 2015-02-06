@@ -183,6 +183,10 @@ function resetContent(data) {
   parentData = data.data
   childData = data.data.children[i].data;
   $(".post-comment").attr("href", "http://reddit.com" + childData.permalink);
+  if ($('.left-arrow')) {
+    $('.left-arrow').remove();
+    $('.right-arrow').remove();
+  };
   mediaType(childData);
   arrowUpDown(data);
 }
