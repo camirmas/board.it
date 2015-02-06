@@ -3,6 +3,7 @@ var childData;
 var input = "";
 var url = "http://www.reddit.com";
 var jsonP = ".json?jsonp=?";
+var nokoData;
 var i = 0
 
 $(document).ready(function() {
@@ -56,7 +57,7 @@ $(document).ready(function() {
             score: childData.score,
             url: childData.url,
             subreddit: childData.subreddit,
-            selftext: childData.selftext,
+            selftext: nokoData,
             reddit_id: childData.id,
             media: childData.media,
             board_id: boardId,
@@ -97,22 +98,27 @@ $(document).ready(function() {
 
 });
 
+function addSegment() {
+  console.log('hi');
+  if ($('.contents.ui.segment').length === 0) {
+    console.log('bye');
+    $('.contents').addClass('ui').addClass('segment');
+  }
+}
 
 function makeImage(content) {
+  addSegment();
   $('.contents').html($('<img class="ui centered rounded bordered image" src =' + content + '>'));
 }
 
-function makeVideo(content) {
-  $('.contents').html($('<iframe width=500 height=350 src="' + content +'">' +
-  '</iframe>'));
-}
-
 function makeText(content) {
+  addSegment();
   $('.contents').html('<h3 class = "content-text">' + content + '</h3>');
 }
 
 function makeLink(content) {
-  $('.contents').html($('<a target="_blank" class = "ui primary button content-text" href="' + content + '"' + 'a>'+ 'Read More' +'</a>'));
+  $('.contents').html($('<a target="_blank" class = "ui massive blue inverted button content-text" href="' + content + '"' + 'a>'+ 'Learn More' +'</a>')).removeClass('ui segment');
+
 }
 
 function makeInfo(content) {
@@ -293,7 +299,8 @@ function grabText(link) {
       url: link
     }
   }).done(function(data) {
-    console.log(data);
+    nokoData = data;
+    addSegment();
     $('.contents').html(data);
   });
 }
