@@ -27,6 +27,7 @@ img {
 
 .sublabel {
   background-color: #d1e1f0 !important;
+  color: black !important;
 }
 
 .left-arrow {
@@ -36,7 +37,7 @@ img {
 }
 
 .right-arrow {
-  margin-top: 120px !important;
+  margin-top: 60px !important;
   color: #d1e1f0;
 }
 
@@ -66,4 +67,9 @@ img {
 .save-to-board {
   margin-right: 20px !important;
   margin-top: 15px !important;
+}
+
+.subreddit {
+  float: right !important;
+  margin-top: 10px;
 }

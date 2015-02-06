@@ -75,18 +75,27 @@ $(document).ready(function() {
         }
       }).done(function(data) {
         $('.all-boards').append('<div class="ui vertical segment single-board" data-boardid="' + data.id + '">'
-        + '<h3 class = "board-title">' + data.title + '</h3> </div>')
+        + '<h3 class = "board-title">' + data.title + '</h3> </div>');
+        $('.add-board').val("");
       });
     }
+  });
+
+  $('.sublabel').on('click', function() {
+    $('.sublabel').animate({
+      marginLeft: '12%',
+    });
+    $('.subreddit').animate({
+    });
   });
 
 });
 
 function inputRequest() {
-  $('input').on('keyup', function(e) {
-    if (e.keyCode == 13 && $('input').val()) {
+  $('.subreddit-input').on('keyup', function(e) {
+    if (e.keyCode == 13 && $('.subreddit-input').val()) {
       input = "/r/" + $('input').val()
-      $('input').val("");
+      $('.subreddit-input').val("");
       $.ajax(url +  input + "/.json?limit=25&count=25", {
         type: 'get',
       }).done(function(data) {
@@ -114,11 +123,11 @@ function makeVideo(content) {
 }
 
 function makeText(content) {
-  $('.contents').html($('<h3 class = "content-text">' + content + '</h3>'));
+  $('.contents').html('<h3 class = "content-text">' + content + '</h3>');
 }
 
 function makeLink(content) {
-  $('.contents').html($('<a target="_blank" class = "content-text" href="' + content + '"' + 'a>'+ childData.title +'</a>'));
+  $('.contents').html($('<a target="_blank" class = "ui primary button content-text" href="' + content + '"' + 'a>'+ 'Read More' +'</a>'));
 
   // $('.contents').append($('<iframe class="ui fullscreen modal link" src ="' + content + '"></iframe>'));
   // $('.contents').on("click", function() {
@@ -129,7 +138,7 @@ function makeLink(content) {
 function makeInfo(content) {
   $('.caption').html($('<h2>' + content.title + '</h2>'));
   $('.post-score').html($('<h1>' + content.score + '</h1>'));
-  $('.subreddit').html($('<p>' + 'submitted by: <a href="http://reddit.com/u/' + content.author + '" target="_blank">' + content.author + '</a> \
+  $('.subreddit-author').html($('<p>' + 'submitted by: <a href="http://reddit.com/u/' + content.author + '" target="_blank">' + content.author + '</a> \
   to: <a href="http://reddit.com/r/' + content.subreddit + '" target="_blank">' + content.subreddit + '</a></p>'));
 }
 
@@ -147,7 +156,7 @@ function mediaType(redditObject) {
     else {imgurCheck(redditObject);};
   }
   else {
-    makeText(redditObject.selftext);
+    makeText((redditObject.selftext));
     makeInfo(redditObject);
   }
 }
