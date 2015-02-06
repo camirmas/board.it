@@ -47,3 +47,7 @@ gem 'rails_12factor'
 gem 'omniauth-reddit', :git => 'git://github.com/jackdempsey/omniauth-reddit.git'
 
 gem 'semantic-ui-sass', github: 'doabit/semantic-ui-sass', branch: 'v1.0beta'
+
+gem 'rest-client'
+
+gem 'nokogiri'
