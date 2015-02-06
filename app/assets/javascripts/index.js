@@ -96,6 +96,10 @@ $(document).ready(function() {
     });
   });
 
+  if (window.location.href.indexOf("boards") !== -1) {
+    $('.subreddit-input').remove();
+  }
+
 });
 
 function addSegment() {
