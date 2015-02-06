@@ -5,7 +5,7 @@ img {
 
 .background {
   /*background-color: #0c1c25;*/
-  background-image: url('noisy_net.png');
+  background-color: #0c1c25;
 }
 
 .post-info {
@@ -34,7 +34,7 @@ img {
 
 .left-arrow {
   margin-top: 63px !important;
-  margin-left: 198px !important;
+  margin-left: 237px !important;
   color: #d1e1f0;
 }
 
@@ -81,4 +81,14 @@ img {
 .content-text {
   width: 20%;
   color: #d1e1f0 !important;
+}
+
+.login-text {
+  margin-left: auto;
+  margin-right: auto;
+  width: 3.5em;
+}
+
+.login-button {
+  width: 100%;
 }
