@@ -13,4 +13,5 @@
 //= require jquery
 //= require jquery_ujs
 //= require semantic-ui
+//= require handlebars
 //= require_tree .

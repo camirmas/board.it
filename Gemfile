@@ -51,3 +51,5 @@ gem 'semantic-ui-sass', github: 'doabit/semantic-ui-sass', branch: 'v1.0beta'
 gem 'rest-client'
 
 gem 'nokogiri'
+
+gem 'handlebars_assets'

@@ -1,0 +1,87 @@
+<script id="add-board-template" type="text/x-handlebars-template">
+  <div class="ui form add-board">
+    <div class="field">
+      <input type="text" name="some_name" value="" placeholder="Name">
+    </div>
+    <div class="ui green submit button board-create">
+    <i class="checkmark icon"></i>
+      Complete
+    </div>
+      <i class="big remove icon hide-form"></i>
+  </div>
+</script>
+
+<script id="board-template" type="text/x-handlebars-template">
+  <div class="ui card" data-boardId="{{id}}">
+    <div class="content">
+      <div class="header left floated">{{title}}</div>
+    </div>
+  </div>
+</script>
+
+<script id="board-edit-template" type="text/x-handlebars-template">
+  <div class="ui form edit-board">
+    <label class="edit-board-label">Title</label>
+    <input type="text" value="{{boardTitle}}">
+    <div class="ui green submit button board-update">
+      <i class="checkmark icon"></i>
+    </div>
+  </div>
+</script>
+
+<script id="board-show-template" type="text/x-handlebars-template">
+  <div class="ui modal board-show" data-boardId="{{boardId}}">
+    <i class="close icon"></i>
+    <div class="header">
+      {{title}}
+    </div>
+    {{#each posts}}
+      <div class="content ui vertical segment" data-postId="{{this.postId}}">
+        <div class="ui small image">
+          <img src="{{this.imageURL}}">
+        </div>
+        <div class="description">
+          <div class="ui header"><span class="board-post-score">{{this.score}}
+           | </span><a href="{{this.url}}" target="_blank">
+           {{this.name}}</a></div>
+              <p>posted by: <a href="http://reddit.com/u/{{this.author}}
+              " target="_blank">{{this.author}}</a> to:
+              <a href="http://reddit.com/r/{{this.subreddit}}" target="_blank">
+              {{this.subreddit}}</a></p>
+            <p>{{this.selftext}}</p>
+        </div>
+      </div>
+    {{/each}}
+  </div>
+</script>
+
+<script id="board-show-user-template" type="text/x-handlebars-template">
+  <div class="ui modal board-show" data-boardId="{{boardId}}">
+    <i class="close icon"></i>
+    <div class="header">
+      {{title}}
+      <i class="remove icon delete"></i>
+      <i class="edit icon update"></i>
+    </div>
+    {{#each posts}}
+      <div class="content ui vertical segment" data-postId="{{this.postId}}">
+        <div class="ui small image">
+          <img src="{{this.imageURL}}">
+        </div>
+        <div class="description">
+          <div class="ui header"><span class="board-post-score">{{this.score}}
+           | </span><a href="{{this.url}}" target="_blank">
+           {{this.name}}</a></div>
+            <p>
+              posted by: <a href="http://reddit.com/u/{{this.author}}" target="_blank">
+              {{this.author}}</a> to:
+              <a href="http://reddit.com/r/{{this.subreddit}}" target="_blank">
+              {{this.subreddit}}</a>
+            </p>
+            <p>{{this.selftext}}</p>
+          <div class="ui right floated red button post-delete">Delete</div>
+        </div>
+      </div>
+    {{/each}}
+  </div>
+</script>

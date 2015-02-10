@@ -19,6 +19,7 @@ body {
 }
 
 .board-show {
+  background: #0c1c25 !important;
   color: black !important;
 }
 
@@ -71,12 +72,13 @@ body {
 }
 
 .edit-board {
-  width: 50%;
+  width: 80%;
   float: left;
   margin: 2em;
 }
 
 .edit-board-label {
+  color: #d1e1f0;
   font-size: 1.6em;
 }
 
@@ -86,4 +88,13 @@ body {
 
 .modal .description {
   font-size: 1.4em;
+}
+
+.boards-title {
+  color: #d1e1f0;
+  margin-bottom: 20px;
+}
+
+.hide-form {
+  color: #d1e1f0;
 }

@@ -2,7 +2,7 @@ $(document).ready(function() {
   $('.menu-button').on('click', function() {
     $('.sidebar').sidebar('setting', 'transition', 'overlay')
     .sidebar('toggle');
-    $('body').removeClass('pushable')
+    $('body').removeClass('pushable');
   });
 
   if (window.location.href.indexOf("boards") === -1) {
@@ -10,20 +10,10 @@ $(document).ready(function() {
   }
 
   $('.add-board-button').on("click", function() {
-    var boardForm = '\
-    <div class="ui form add-board">\
-      <div class="field">\
-        <input type="text" name="some_name" value="" placeholder="Name">\
-      </div>\
-      <div class="ui green submit button board-create">\
-      <i class="checkmark icon"></i>\
-      Complete\
-      </div>\
-        <i class="big remove icon hide-form"></i>\
-    </div>';
+    var source = $("#add-board-template").html();
 
     if ($(".add-board").length === 0) {
-      $(".boards-view").prepend(boardForm);
+      $(".boards-view").prepend(source);
       $('.boards-view').find(".add-board").hide().slideDown(300);
     }
   });
@@ -41,14 +31,12 @@ $(document).ready(function() {
         }
       }
     }).done(function(data) {
-      var board = '\
-      <div class="ui card" data-boardId="' + data.id + '">\
-        <div class="content">\
-          <div class="header left floated">' + data.title + '</div>\
-        </div>\
-      </div>\
-      ';
-      $(".cards").append(board);
+      var source   = $("#board-template").html();
+      var template = Handlebars.compile(source);
+      var context  = { id: data.id, title: data.title };
+      var html     = template(context);
+
+      $(".cards").append(html);
       $(".cards").find("[data-boardId='" + data.id + "']").hide().fadeIn(200);
     });
   });
@@ -78,16 +66,12 @@ $(document).ready(function() {
 
   $(document).on("click", ".board-show .update", function(event) {
     var boardTitle = $.trim($(this).parent().text());
-    var editForm = '\
-    <div class="ui form edit-board">\
-      <label class="edit-board-label">Title</label>\
-      <input type="text" value="' + boardTitle + '">\
-      <div class="ui green submit button board-update">\
-        <i class="checkmark icon"></i>\
-      </div>\
-    </div>\
-    ';
-    $(this).parent().replaceWith(editForm);
+    var source   = $("#board-edit-template").html();
+    var template = Handlebars.compile(source);
+    var context  = { title: boardTitle };
+    var html     = template(context);
+
+    $(this).parent().replaceWith(html);
   });
 
   $(document).on("click", ".board-show .board-update", function() {
@@ -129,76 +113,32 @@ $(document).ready(function() {
       type: 'get'
     }).done(function(data) {
       var can_modify = $(".modifiable").length !== 0;
-
-      if (can_modify) {
-        var boardModalStart = '\
-        <div class="ui modal board-show" data-boardId="' + boardId + '">\
-          <i class="close icon"></i>\
-          <div class="header">\
-            ' + boardTitle + '\
-            <i class="remove icon delete""></i>\
-            <i class="edit icon update"></i>\
-          </div>\
-        ';
-      } else {
-        var boardModalStart = '\
-        <div class="ui modal board-show" data-boardId="' + boardId + '">\
-          <i class="close icon"></i>\
-          <div class="header">\
-            ' + boardTitle + '\
-          </div>\
-        ';
-      }
-      var boardModalEnd = '</div>';
+      tempType = can_modify ? "#board-show-user-template" : "#board-show-template";
+      var source   = $(tempType).html();
+      var template = Handlebars.compile(source);
+      var context  = {
+        userId: userId,
+        boardId: boardId,
+        title: boardTitle,
+        posts: []
+      };
 
       for (var i = 0; i < data.length; i++) {
-        console.log(data[i].thumbnail);
         var imageURL = data[i].thumbnail ? data[i].thumbnail : "noisy_net.png";
-        if (can_modify) {
-          var listItem = '\
-            <div class="content ui vertical segment" data-postId="' + data[i].id + '">\
-              <div class="ui small image">\
-                <img src="' + imageURL + '">\
-              </div>\
-              <div class="description">\
-                <div class="ui header"><span class="board-post-score">' + data[i].score + '\
-                 | </span><a href="' + data[i].url + '" target="_blank">\
-                 ' + data[i].title + '</a></div>\
-                <p>posted by: <a href="http://reddit.com/u/' + data[i].author + '\
-                " target="_blank">\
-                ' + data[i].author + '</a> to: \
-                <a href="http://reddit.com/r/' + data[i].subreddit + '" target="_blank">\
-                ' + data[i].subreddit + '</a></p>\
-                <p>' + data[i].selftext + '</p>\
-                <div class="ui right floated red button post-delete">Delete</div>\
-              </div>\
-            </div>\
-          ';
-        } else {
-          var listItem = '\
-          <div class="content ui vertical segment" data-postId="' + data[i].id + '">\
-            <div class="ui small image">\
-              <img src="' + imageURL + '">\
-            </div>\
-            <div class="description">\
-              <div class="ui header"><span class="board-post-score">' + data[i].score + '\
-                | </span><a href="' + data[i].url + '" target="_blank">\
-                ' + data[i].title + '</a></div>\
-                <p>posted by: <a href="http://reddit.com/u/' + data[i].author + '\
-                  " target="_blank">\
-                  ' + data[i].author + '</a> to: \
-                  <a href="http://reddit.com/r/' + data[i].subreddit + '" target="_blank">\
-                  ' + data[i].subreddit + '</a></p>\
-                <p>' + data[i].selftext + '</p>\
-              </div>\
-            </div>\
-          ';
-        }
-        boardModalStart += listItem;
+        context.posts.push({
+          postId: data[i].id,
+          imageURL: imageURL,
+          url: data[i].url,
+          score: data[i].score,
+          name: data[i].title,
+          author: data[i].author,
+          subreddit: data[i].subreddit,
+          selftext: data[i].selftext
+        });
       }
-      $(".boards-view").append(boardModalStart + boardModalEnd);
-      $('.board-show').modal('show');
-      $('.board-show').modal('setting', {
+      var html = template(context);
+      $(".boards-view").append(html);
+      $('.board-show').modal('show').modal('setting', {
         onHide: function() {
           window.location.hash = "";
         }
@@ -207,8 +147,8 @@ $(document).ready(function() {
   });
 
   $(document).on("click", ".post-delete", function() {
-    var postId = $(this).closest(".content").data("postid");
-    var userId = $(".boards-view").data('userid');
+    var postId  = $(this).closest(".content").data("postid");
+    var userId  = $(".boards-view").data('userid');
     var boardId = $(this).closest(".board-show").data('boardid');
     var confirmDelete = confirm("Are you sure you want to delete this post?");
 
